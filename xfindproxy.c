@@ -25,6 +25,7 @@ not be used in advertising or otherwise to promote the sale, use or
 other dealings in this Software without prior written authorization
 from The Open Group.
 */
+/* $XFree86: xc/programs/xfindproxy/xfindproxy.c,v 1.8 2001/12/14 20:01:32 dawes Exp $ */
 
 
 #include <stdio.h>
@@ -40,14 +41,18 @@ from The Open Group.
 #include <X11/PM/PMproto.h>
 #include "xfindproxy.h"
 
-#ifndef X_NOT_STDC_ENV
 #include <stdlib.h>
-#else
-extern char *getenv();
-#endif
+#include <ctype.h>
 
-
-void PMprocessMessages ();
+static void PMprocessMessages(IceConn iceConn, IcePointer clientData, 
+			      int opcode, unsigned long length, Bool swap, 
+			      IceReplyWaitInfo *replyWait, 
+			      Bool *replyReadyRet);
+static void _XtProcessIceMsgProc(XtPointer client_data, int *source, 
+				 XtInputId *id);
+static void _XtIceWatchProc(IceConn ice_conn, IcePointer client_data, 
+			    Bool opening, IcePointer *watch_data);
+static Status InitWatchProcs(XtAppContext appContext);
 
 int PMopcode;
 
@@ -64,9 +69,8 @@ typedef struct {
 } GetProxyAddrReply;
 
 
-static int cvthexkey (hexstr, ptrp)	/* turn hex key string into octets */
-    char *hexstr;
-    char **ptrp;
+static int 
+cvthexkey(char *hexstr, char **ptrp)	/* turn hex key string into octets */
 {
     int i;
     int len = 0;
@@ -113,12 +117,8 @@ static int cvthexkey (hexstr, ptrp)	/* turn hex key string into octets */
     return len;
 }
 
-
-main (argc, argv)
-
-int  argc;
-char **argv;
-
+int
+main(int argc, char *argv[])
 {
     IceConn			iceConn;
     IceProtocolSetupStatus	setupstat;
@@ -328,30 +328,26 @@ char **argv;
 	    if (reply.status == PM_Success)
 	    {
 		fprintf (stdout, "%s\n", reply.addr);
+		exit (0);
 	    }
 	    else
 	    {
 		fprintf (stderr, "Error from proxy manager: %s\n",
 		    reply.error);
+		exit (1);
 	    }
 	}
     }
+    /*NOTREACHED*/
+    exit(0);
 }
 
 
 
-void
-PMprocessMessages (iceConn, clientData, opcode,
-    length, swap, replyWait, replyReadyRet)
-
-IceConn		 iceConn;
-IcePointer       clientData;
-int		 opcode;
-unsigned long	 length;
-Bool		 swap;
-IceReplyWaitInfo *replyWait;
-Bool		 *replyReadyRet;
-
+static void
+PMprocessMessages(IceConn iceConn, IcePointer clientData, int opcode,
+		  unsigned long length, Bool swap, 
+		  IceReplyWaitInfo *replyWait, Bool *replyReadyRet)
 {
     if (replyWait)
 	*replyReadyRet = False;
@@ -418,13 +414,8 @@ Bool		 *replyReadyRet;
 }
 
 
-void
-_XtProcessIceMsgProc (client_data, source, id)
-
-XtPointer	client_data;
-int 		*source;
-XtInputId	*id;
-
+static void
+_XtProcessIceMsgProc(XtPointer client_data, int *source, XtInputId *id)
 {
     IceConn			ice_conn = (IceConn) client_data;
     IceProcessMessagesStatus	status;
@@ -433,25 +424,19 @@ XtInputId	*id;
 
     if (status == IceProcessMessagesIOError)
     {
-	printf ("IO error occured\n");
+	fprintf (stderr, "IO error occured\n");
 	exit (1);
     }
 }
 
 
-void
-_XtIceWatchProc (ice_conn, client_data, opening, watch_data)
-
-IceConn 	ice_conn;
-IcePointer	client_data;
-Bool		opening;
-IcePointer	*watch_data;
-
+static void
+_XtIceWatchProc(IceConn ice_conn, IcePointer client_data, 
+		Bool opening, IcePointer *watch_data)
 {
     if (opening)
     {
 	XtAppContext appContext = (XtAppContext) client_data;
-	void _XtProcessIceMsgProc ();
 
 	*watch_data = (IcePointer) XtAppAddInput (
 	    appContext,
@@ -467,11 +452,8 @@ IcePointer	*watch_data;
 }
 
 
-Status
-InitWatchProcs (appContext)
-
-XtAppContext appContext;
-
+static Status
+InitWatchProcs(XtAppContext appContext)
 {
     return (IceAddConnectionWatch (_XtIceWatchProc, (IcePointer) appContext));
 }
