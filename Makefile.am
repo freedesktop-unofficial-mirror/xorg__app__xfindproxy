@@ -28,6 +28,6 @@ xfindproxy_SOURCES =	\
         xfindproxy.c \
         xfindproxy.h
 
-dist_man_MANS = \
+dist_man1_MANS = \
         xfindproxy.man
 
