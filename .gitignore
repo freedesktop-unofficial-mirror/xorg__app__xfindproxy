@@ -18,3 +18,7 @@ stamp-h1
 xfindproxy
 xfindproxy.1
 *~
+*.o
+xfindproxy-*.tar.*
+ChangeLog
+tags
