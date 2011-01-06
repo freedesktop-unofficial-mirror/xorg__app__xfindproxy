@@ -21,7 +21,7 @@
 
 bin_PROGRAMS = xfindproxy
 
-AM_CFLAGS = $(XFINDPROXY_CFLAGS)
+AM_CFLAGS = $(CWARNFLAGS) $(XFINDPROXY_CFLAGS)
 xfindproxy_LDADD = $(XFINDPROXY_LIBS)
 
 xfindproxy_SOURCES =	\
