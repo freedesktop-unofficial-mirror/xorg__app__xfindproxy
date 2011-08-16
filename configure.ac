@@ -40,6 +40,6 @@ XORG_MACROS_VERSION(1.8)
 XORG_DEFAULT_OPTIONS
 
 # Checks for pkg-config packages
-PKG_CHECK_MODULES(XFINDPROXY, x11 ice xt xproxymngproto)
+PKG_CHECK_MODULES(XFINDPROXY, xproto ice xt xproxymngproto)
 
 AC_OUTPUT([Makefile])
