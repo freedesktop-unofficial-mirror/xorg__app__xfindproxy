@@ -47,9 +47,11 @@ from The Open Group.
  * Compute the number of bytes for a STRING representation
  */
 
-#define STRING_BYTES(_str) (2 + (_str ? strlen (_str) : 0) + \
-		     PAD64 (2 + (_str ? strlen (_str) : 0)))
-
+static inline int
+STRING_BYTES(const char *string) {
+    int len = string ? strlen (string) : 0;
+    return (2 + len + PAD64 (2 + len));
+}
 
 
 #define SKIP_STRING(_pBuf, _swap) \
@@ -71,18 +73,21 @@ from The Open Group.
     _pBuf += 2; \
 }
 
-#define STORE_STRING(_pBuf, _string) \
-{ \
-    int _len = _string ? strlen (_string) : 0; \
-    STORE_CARD16 (_pBuf, _len); \
-    if (_len) { \
-        memcpy (_pBuf, _string, _len); \
-        _pBuf += _len; \
-    } \
-    if (PAD64 (2 + _len)) \
-        _pBuf += PAD64 (2 + _len); \
+static inline char *
+store_string(char *pBuf, const char *string)
+{
+    int len = string ? strlen (string) : 0;
+    STORE_CARD16 (pBuf, len);
+    if (len) {
+        memcpy (pBuf, string, len);
+        pBuf += len;
+    }
+    if (PAD64 (2 + len))
+        pBuf += PAD64 (2 + len);
+    return pBuf;
 }
 
+#define STORE_STRING(_pBuf, _string) _pBuf = store_string(_pBuf, _string)
 
 /*
  * EXTRACT macros
