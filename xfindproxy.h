@@ -31,7 +31,7 @@ from The Open Group.
  * Pad to a 64 bit boundary
  */
 
-#define PAD64(_bytes) ((8 - ((unsigned int) (_bytes) % 8)) % 8)
+#define PAD64(_bytes) ((8 - ((size_t) (_bytes) % 8)) % 8)
 
 #define PADDED_BYTES64(_bytes) (_bytes + PAD64 (_bytes))
 
@@ -40,16 +40,16 @@ from The Open Group.
  * Number of 8 byte units in _bytes.
  */
 
-#define WORD64COUNT(_bytes) (((unsigned int) ((_bytes) + 7)) >> 3)
+#define WORD64COUNT(_bytes) (((size_t) ((_bytes) + 7)) >> 3)
 
 
 /*
  * Compute the number of bytes for a STRING representation
  */
 
-static inline int
+static inline size_t
 STRING_BYTES(const char *string) {
-    int len = string ? strlen (string) : 0;
+    size_t len = string ? strlen (string) : 0;
     return (2 + len + PAD64 (2 + len));
 }
 
@@ -76,8 +76,8 @@ STRING_BYTES(const char *string) {
 static inline char *
 store_string(char *pBuf, const char *string)
 {
-    int len = string ? strlen (string) : 0;
-    STORE_CARD16 (pBuf, len);
+    size_t len = string ? strlen (string) : 0;
+    STORE_CARD16 (pBuf, (CARD16) len);
     if (len) {
         memcpy (pBuf, string, len);
         pBuf += len;

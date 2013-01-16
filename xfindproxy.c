@@ -126,7 +126,8 @@ main(int argc, char *argv[])
     char			*release = NULL;
     pmGetProxyAddrMsg		*pMsg;
     char 			*pData;
-    int				len, i;
+    int				i;
+    size_t			len;
     IceReplyWaitInfo		replyWait;
     GetProxyAddrReply		reply;
     int				majorVersion, minorVersion;
@@ -291,7 +292,7 @@ main(int argc, char *argv[])
 	SIZEOF (pmGetProxyAddrMsg), WORD64COUNT (len),
 	pmGetProxyAddrMsg, pMsg, pData);
 
-    pMsg->authLen = authLen;
+    pMsg->authLen = (CARD16) authLen;
 
     STORE_STRING (pData, serviceName);
     STORE_STRING (pData, serverAddress);
