@@ -93,7 +93,7 @@ cvthexkey(char *hexstr, char **ptrp)	/* turn hex key string into octets */
 
     /* now we know that the input is good */
     len >>= 1;
-    retval = (char *) malloc (len);
+    retval = malloc (len);
     if (!retval)
 	return -1;
 

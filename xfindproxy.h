@@ -105,7 +105,7 @@ store_string(char *pBuf, const char *string)
 { \
     CARD16 _len; \
     EXTRACT_CARD16 (_pBuf, _swap, _len); \
-    _string = (char *) malloc (_len + 1); \
+    _string = malloc (_len + 1); \
     memcpy (_string, _pBuf, _len); \
     _string[_len] = '\0'; \
     _pBuf += _len; \
