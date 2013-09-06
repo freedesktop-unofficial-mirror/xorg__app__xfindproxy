@@ -70,8 +70,8 @@ typedef struct {
 static int 
 cvthexkey(const char *hexstr, char **ptrp) /* turn hex key string into octets */
 {
-    int i;
-    int len = 0;
+    unsigned int i;
+    unsigned int len = 0;
     char *retval;
     const char *s;
     unsigned char *us;
@@ -100,7 +100,7 @@ cvthexkey(const char *hexstr, char **ptrp) /* turn hex key string into octets */
 	c = *hexstr;
 	if (isspace(c)) continue;	 /* already know it is ascii */
 	if (isupper(c))
-	    c = tolower(c);
+	    c = (char) tolower(c);
 	if (savec) {
 #define atoh(c) ((c) - (((c) >= '0' && (c) <= '9') ? '0' : ('a'-10)))
 	    *us = (unsigned char)((atoh(savec) << 4) + atoh(c));
@@ -113,7 +113,7 @@ cvthexkey(const char *hexstr, char **ptrp) /* turn hex key string into octets */
 	}
     }
     *ptrp = retval;
-    return len;
+    return (int) len;
 }
 
 int
