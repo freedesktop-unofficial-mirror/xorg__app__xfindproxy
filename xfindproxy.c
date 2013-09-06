@@ -60,8 +60,6 @@ static int PMversionCount = 1;
 static IcePoVersionRec PMversions[] =
                 {{PM_MAJOR_VERSION, PM_MINOR_VERSION, PMprocessMessages}};
 
-static XtAppContext appContext;
-
 typedef struct {
     int		status;
     char	*addr;
@@ -120,6 +118,7 @@ cvthexkey(char *hexstr, char **ptrp)	/* turn hex key string into octets */
 int
 main(int argc, char *argv[])
 {
+    static XtAppContext 	appContext;
     IceConn			iceConn;
     IceProtocolSetupStatus	setupstat;
     char			*vendor = NULL;
