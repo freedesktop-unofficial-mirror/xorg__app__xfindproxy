@@ -68,11 +68,12 @@ typedef struct {
 
 
 static int 
-cvthexkey(char *hexstr, char **ptrp)	/* turn hex key string into octets */
+cvthexkey(const char *hexstr, char **ptrp) /* turn hex key string into octets */
 {
     int i;
     int len = 0;
-    char *retval, *s;
+    char *retval;
+    const char *s;
     unsigned char *us;
     char c;
     char savec = '\0';
