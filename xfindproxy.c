@@ -116,6 +116,18 @@ cvthexkey(const char *hexstr, char **ptrp) /* turn hex key string into octets */
     return (int) len;
 }
 
+static void _X_NORETURN
+usage (void)
+{
+    fprintf (stderr,
+	     "usage: xfindproxy -server serverAddr -name serviceName"
+	     " [-manager managerAddr]\n"
+	     "                  [-auth] [-host hostAddr] [-options opts]\n"
+	     "-manager can be omitted only if PROXY_MANAGER is in the environment\n");
+    exit (1);
+}
+
+
 int
 main(int argc, char *argv[])
 {
@@ -180,13 +192,23 @@ main(int argc, char *argv[])
 	}
 
     usage:
-	fprintf (stderr,
-	 "usage: xfindproxy -server serverAddr -name serviceName [-manager managerAddr] [-auth] [-host hostAddr] [-options opts]\n-manager can be omitted only if PROXY_MANAGER is in the environment\n");
-	exit (1);
+	if (i >= argc)
+	    fprintf (stderr, "%s: %s requires an argument\n",
+		     argv[0], argv[i-1]);
+	else
+	    fprintf (stderr, "%s: unrecognized argument '%s'\n",
+		     argv[0], argv[i]);
+	usage();
     }
 
-    if (serviceName == NULL || serverAddress == NULL)
-	goto usage;
+    if (serviceName == NULL) {
+	fprintf (stderr, "%s: -name serviceName must be specified\n", argv[0]);
+	usage();
+    }
+    if (serverAddress == NULL) {
+	fprintf (stderr, "%s: -server serverAddr must be specified\n", argv[0]);
+	usage();
+    }
 
     if (managerAddress == NULL) {
 	managerAddress = getenv("PROXY_MANAGER");
