@@ -27,6 +27,9 @@ from The Open Group.
 */
 /* $XFree86: xc/programs/xfindproxy/xfindproxy.c,v 1.8tsi Exp $ */
 
+#ifdef HAVE_CONFIG_H
+# include "config.h"
+#endif
 
 #include <stdio.h>
 #include <X11/Xos.h>
@@ -123,7 +126,8 @@ usage (void)
 	     "usage: xfindproxy -server serverAddr -name serviceName"
 	     " [-manager managerAddr]\n"
 	     "                  [-auth] [-host hostAddr] [-options opts]\n"
-	     "-manager can be omitted only if PROXY_MANAGER is in the environment\n");
+	     "-manager can be omitted only if PROXY_MANAGER is in the environment\n"
+	     "       xfindproxy -version\n");
     exit (1);
 }
 
@@ -188,6 +192,10 @@ main(int argc, char *argv[])
 		if (++i >= argc) goto usage;
 		startOptions = XtNewString (argv[i]);
 		continue;
+
+	    case 'v':
+		puts(PACKAGE_STRING);
+		exit(0);
 	    }
 	}
 
