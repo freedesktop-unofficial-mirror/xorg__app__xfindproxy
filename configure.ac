@@ -23,7 +23,7 @@ dnl Process this file with autoconf to create configure.
 
 # Initialize Autoconf
 AC_PREREQ([2.60])
-AC_INIT([xfindproxy], [1.0.3],
+AC_INIT([xfindproxy], [1.0.4],
         [https://bugs.freedesktop.org/enter_bug.cgi?product=xorg],
         [xfindproxy])
 AC_CONFIG_SRCDIR([Makefile.am])
